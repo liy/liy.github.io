@@ -23,4 +23,4 @@ disqus_show_comment_count: true
 google_analytics: UA-38976134-1
 
 # exclude these file when publish to _site
-exclude: ['Gemfile', 'Gemfile.lock', 'Rakefile', 'README.md']
+exclude: ['Gemfile', 'Gemfile.lock', 'Rakefile', 'README.md', '.pygments-cache']
