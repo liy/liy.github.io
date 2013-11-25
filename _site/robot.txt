@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://aircapsule.com/sitemap.xml 
