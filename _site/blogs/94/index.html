@@ -48,8 +48,8 @@
 <meta content='text/html; charset=utf-8' http-equiv='content-type' />
 <meta content="http://muan.co/images/og.png" property="og:image" />
 
-  <meta content='http://aircapsule.com/blog/2013/11/23/octopress-to-jekyll/' property='og:url' />
-  <meta content="Try to get a new theme for my blog. I'm not very satisfied with Octopress' slow update cycle, I decided to switch to ..." property='og:description' />
+  <meta content='http://aircapsule.com/blogs/94' property='og:url' />
+  <meta content="rvm cannot compile executable, for some reasons:{% codeblock %}{% codeblock %}... configure: error: C compiler cannot..." property='og:description' />
   <meta content="article" property="og:type" />
 
 <!-- - -->
@@ -89,23 +89,24 @@
           <article>
             <div class="mark"></div>
             <header>
-              <h2 class="post-title">Octopress to Jekyll</h2>
+              <h2 class="post-title">Install Ruby through RVM on Xcode 4.2.1 on Lion</h2>
               
-                <small class="datetime muted">23 Nov 2013</small>
+                <small class="datetime muted">12 Jan 2012</small>
               
             </header>
-            <p>Try to get a new theme for my blog. I’m not very satisfied with Octopress’ slow update cycle, I decided to switch to the Jekyll.(Although Octopress is built on top of Jekyll) Since I’m not proficient in Ruby, it turned out to be a quite difficult job for me.</p>
+            <p>rvm cannot compile executable, for some reasons:</p>
 
-<p>Github pages does not support certain plugins probably because of security reason. I have to generate the static site locally and push it to the master branch of my blog repository.(For some reason this repository use master branch for github page, usually should be gh-pages) This means I need to maintain two branches, manually. One for the source of my blog, one for the actual html site, which is not ideal.</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;div class='bogus-wrapper'&gt;&lt;notextile&gt;&lt;figure class='code'&gt;&lt;div class="highlight"&gt;&lt;table&gt;&lt;tr&gt;&lt;td class="gutter"&gt;&lt;pre class="line-numbers"&gt;&lt;span class='line-number'&gt;1&lt;/span&gt;
+</span><span class="line">&lt;/pre&gt;&lt;/td&gt;&lt;td class='code'&gt;&lt;pre&gt;&lt;code class=''&gt;&lt;span class='line'&gt;... configure: error: C compiler cannot create executables ...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>I copied some rake task from internet and Octopress rake file for handling site generateion, deployment, post creation.</p>
-
-<p>It do the jobs for now. Till next time, hopefully I’ll have some proper notes for graphics programming.</p>
+<p><a href="http://stackoverflow.com/questions/8032824/cant-install-ruby-under-lion-with-rvm-gcc-issues" target="_blank">This post</a> magically solve the problem!</p>
 
             <footer class="signoff">
   <p>
     Liy
-    <span class="muted">at 21:41</span>
+    <span class="muted">at 00:00</span>
   </p>
 </footer>
           </article>
@@ -113,18 +114,18 @@
           <div class="pagination">
             
               <div class="tip">Use ← and → to navigate between posts.</div>
-              <a href="/blog/2013/06/02/opengl-transformations/" id="js-previous-post">
+              <a href="/blogs/91" id="js-previous-post">
                 <span class="small-title">Previous Post</span>
-                <h4>OpenGL Transformations</h4>
-                <span class="small upcase datetime muted">02 Jun 2013</span>
+                <h4>Install git through Homebrew on Lion notes</h4>
+                <span class="small upcase datetime muted">12 Jan 2012</span>
               </a>
             
             
               <hr />
-              <a href="/blog/2013/11/23/2013-11-23-normal-mapping/" id="js-next-post">
+              <a href="/blog/2013/03/13/mandelbrot-set-and-webgl/" id="js-next-post">
                 <span class="small-title">Next Post</span>
-                <h4>Normal Mapping</h4>
-                <span class="small upcase datetime muted">23 Nov 2013</span>
+                <h4>Mandelbrot set and WebGL</h4>
+                <span class="small upcase datetime muted">13 Mar 2013</span>
               </a>
             
           </div>
@@ -139,8 +140,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://aircapsule.com/blog/2013/11/23/octopress-to-jekyll/';
-        var disqus_url = 'http://aircapsule.com/blog/2013/11/23/octopress-to-jekyll/';
+        var disqus_identifier = 'http://aircapsule.com/blogs/94';
+        var disqus_url = 'http://aircapsule.com/blogs/94';
         var disqus_script = 'embed.js';
       
     (function () {

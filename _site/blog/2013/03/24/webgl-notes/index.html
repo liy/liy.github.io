@@ -48,8 +48,8 @@
 <meta content='text/html; charset=utf-8' http-equiv='content-type' />
 <meta content="http://muan.co/images/og.png" property="og:image" />
 
-  <meta content='http://aircapsule.com/blog/2013/11/23/octopress-to-jekyll/' property='og:url' />
-  <meta content="Try to get a new theme for my blog. I'm not very satisfied with Octopress' slow update cycle, I decided to switch to ..." property='og:description' />
+  <meta content='http://aircapsule.com/blog/2013/03/24/webgl-notes/' property='og:url' />
+  <meta content="### [Framebuffer](http://games.greggman.com/game/webgl-image-processing-continued/)Framebuffer is not a buffer. It is..." property='og:description' />
   <meta content="article" property="og:type" />
 
 <!-- - -->
@@ -89,23 +89,22 @@
           <article>
             <div class="mark"></div>
             <header>
-              <h2 class="post-title">Octopress to Jekyll</h2>
+              <h2 class="post-title">webgl notes</h2>
               
-                <small class="datetime muted">23 Nov 2013</small>
+                <small class="datetime muted">24 Mar 2013</small>
               
             </header>
-            <p>Try to get a new theme for my blog. I’m not very satisfied with Octopress’ slow update cycle, I decided to switch to the Jekyll.(Although Octopress is built on top of Jekyll) Since I’m not proficient in Ruby, it turned out to be a quite difficult job for me.</p>
+            <h3 id="framebufferhttpgamesgreggmancomgamewebgl-image-processing-continued"><a href="http://games.greggman.com/game/webgl-image-processing-continued/">Framebuffer</a></h3>
+<p>Framebuffer is not a buffer. It is a collection of states, which has very low memory footprint. Imagine it is a C struct with lots of pointer to a real buffer, etc.</p>
 
-<p>Github pages does not support certain plugins probably because of security reason. I have to generate the static site locally and push it to the master branch of my blog repository.(For some reason this repository use master branch for github page, usually should be gh-pages) This means I need to maintain two branches, manually. One for the source of my blog, one for the actual html site, which is not ideal.</p>
+<h3 id="renderbufferhttpstackoverflowcomquestions2213030whats-the-concept-of-and-differences-between-framebuffer-and-renderbuffer-in"><a href="http://stackoverflow.com/questions/2213030/whats-the-concept-of-and-differences-between-framebuffer-and-renderbuffer-in">Renderbuffer</a></h3>
 
-<p>I copied some rake task from internet and Octopress rake file for handling site generateion, deployment, post creation.</p>
-
-<p>It do the jobs for now. Till next time, hopefully I’ll have some proper notes for graphics programming.</p>
+<p>Renderbuffer object is newly introduced for offscreen rendering. It allows to render a scene directly to a renderbuffer object, instead of rendering to a texture object. Renderbuffer is simply a data storage object containing a single image of a renderable internal format. It is used to store OpenGL logical buffers that do not have corresponding texture format, such as stencil or depth buffer.</p>
 
             <footer class="signoff">
   <p>
     Liy
-    <span class="muted">at 21:41</span>
+    <span class="muted">at 10:25</span>
   </p>
 </footer>
           </article>
@@ -113,18 +112,18 @@
           <div class="pagination">
             
               <div class="tip">Use ← and → to navigate between posts.</div>
-              <a href="/blog/2013/06/02/opengl-transformations/" id="js-previous-post">
+              <a href="/blog/2013/03/13/mandelbrot-set-and-webgl/" id="js-previous-post">
                 <span class="small-title">Previous Post</span>
-                <h4>OpenGL Transformations</h4>
-                <span class="small upcase datetime muted">02 Jun 2013</span>
+                <h4>Mandelbrot set and WebGL</h4>
+                <span class="small upcase datetime muted">13 Mar 2013</span>
               </a>
             
             
               <hr />
-              <a href="/blog/2013/11/23/2013-11-23-normal-mapping/" id="js-next-post">
+              <a href="/blog/2013/03/24/orthogonal-projection-and-clip-space/" id="js-next-post">
                 <span class="small-title">Next Post</span>
-                <h4>Normal Mapping</h4>
-                <span class="small upcase datetime muted">23 Nov 2013</span>
+                <h4>orthogonal projection and clip space</h4>
+                <span class="small upcase datetime muted">24 Mar 2013</span>
               </a>
             
           </div>
@@ -139,8 +138,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://aircapsule.com/blog/2013/11/23/octopress-to-jekyll/';
-        var disqus_url = 'http://aircapsule.com/blog/2013/11/23/octopress-to-jekyll/';
+        var disqus_identifier = 'http://aircapsule.com/blog/2013/03/24/webgl-notes/';
+        var disqus_url = 'http://aircapsule.com/blog/2013/03/24/webgl-notes/';
         var disqus_script = 'embed.js';
       
     (function () {

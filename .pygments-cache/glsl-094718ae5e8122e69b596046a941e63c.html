@@ -1,0 +1,9 @@
+<div class="highlight"><pre><span class="k">attribute</span> <span class="k">vec3</span> <span class="n">a_position</span><span class="p">;</span>
+
+<span class="c1">// orthogonal projection matrix</span>
+<span class="k">uniform</span> <span class="k">mat4</span> <span class="n">u_pMatrix</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">(){</span>
+  <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">u_pMatrix</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">a_position</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
