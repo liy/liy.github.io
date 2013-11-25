@@ -1,0 +1,26 @@
+title:            AirCapsule
+url:              http://aircapsule.com
+root:             /
+permalink:        /blog/:year/:month/:day/:title/
+pygments:         true
+markdown:         kramdown
+# rdiscount:
+#   extensions:     [smart]
+google_analytics: UA-21332781-7
+timezone:         Europe/London
+paginate:         5
+links:
+  - name:         About
+    url:          /about.html
+  - name:         RSS
+    url:          /feed.xml
+
+# Disqus Comments
+disqus_short_name: aircapsule
+disqus_show_comment_count: true
+
+# Google Analytics
+google_analytics: UA-38976134-1
+
+# exclude these file when publish to _site
+exclude: ['Gemfile', 'Gemfile.lock', 'Rakefile', 'README.md']

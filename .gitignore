@@ -1,0 +1,10 @@
+.sass-cache/
+.pygments-cache/
+_site/
+*.swp
+*.scssc
+.DS_Store
+.rvmrc
+*.psd
+*~
+_weibo_config.yml

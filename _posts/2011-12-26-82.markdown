@@ -1,0 +1,13 @@
+---
+layout: post
+title: "Spork in RoR"
+date: 2011-12-26
+wordpress_id: 82
+permalink: /blogs/82
+comments: true
+---
+Regarding the "<a title="Spork" href="http://ruby.railstutorial.org/chapters/static-pages#sec:spork" target="_blank">Spork</a>" in the RoR tutorial... Do not use it!!
+
+In the section author mentioned:
+<blockquote>...Spork prefork loading, which can sometimes prevent necessary files from being re-loaded...</blockquote>
+The autotest will no longer be reliable if you try to use spork.

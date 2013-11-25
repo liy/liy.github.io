@@ -1,0 +1,15 @@
+---
+layout: post
+title: "The Game loop"
+date: 2010-12-5
+wordpress_id: 331
+permalink: /blogs/331
+comments: true
+---
+很早之前就研究过关于Game loop的问题。昨天在研究Win32 game window的时候再次牵扯到了该问题。发现以前了解的game loop结构不对。
+
+关于各种Game loop的解析：<a href="http://www.koonsolo.com/news/dewitters-gameloop/" target="_blank">the game loop</a> 还得仔细再看看才行...
+
+另外还有个基于上边这个文章的视频：
+
+[blip.tv http://blip.tv/play/Ac6URAI]

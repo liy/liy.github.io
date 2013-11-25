@@ -1,0 +1,23 @@
+---
+layout: post
+title: "顿悟GJK为啥不能直接用来查找碰撞信息"
+date: 2010-10-15
+wordpress_id: 317
+permalink: /blogs/317
+comments: true
+---
+一直搞不明白网上的人说用GJK一定要加margin。我就在想，加个屁的margin啊，直接找origin到simplex边的最短距离的那个vetor就是penetration vector嘛，直接就可以找到contact normal了嘛。结果还是证明我是睁眼瞎。
+
+下图是两个三角形碰撞的两种情况，灰色的六边形是两个三角形的minkowski difference(sum of the reverse)。特性是如果两个凸多边形碰撞，他们的minkowski difference会包括（0，0）原点（那个稍微大点的黑点）。
+
+左边是两个三角形有一点碰撞，实际上可以直接通过原点到simplex的最近的边（橘黄色右上的那个边），作垂线，然后这个垂线就是penetration vector，可以拿来获取碰撞信息，比如，contact normal，penetration depth，contact points啊。显而易见三。
+
+不过右边那个图，因为碰撞且有很大幅度的相互覆盖，如果找最近的那条边的垂线...显而易见已经不再能表示具体含义了。
+
+<a href="http://aircapsule.files.wordpress.com/2010/10/gjk.jpg"><img class="alignleft size-full wp-image-318" title="GJK collision detection" src="http://aircapsule.files.wordpress.com/2010/10/gjk.jpg" alt="" width="670" height="233" /></a>
+
+所以说为啥网上的人说GJK需要加一个很小的margin，这样两个物体的margin相互覆盖的时候叫做shallow penetration，然后可以获取比较准确的contact information。如果是deep penetration，就是相互覆盖太大了，就需要用另外的算法来检测碰撞信息了！！比如：EPA！
+
+刚才又在想，为啥不直接找从原点到整个minkowski sum(difference)的边的最短垂线，仿佛那样就是penetration vector。不过想了一下，再次证明我睁眼瞎...如果以两个12边型相互碰撞...搞不好有24条边要检测；再或者，如果是俩圆形，椭圆形，不规则的圆弧convex...再加上3D...估计再好的电脑也撑不住吧。
+
+所以还是先找simplex（2D是一个 三角形，3D里边是一个四面体，特性是：能包含一个“点”的最小形状）好，方便些。

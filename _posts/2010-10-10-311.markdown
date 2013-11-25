@@ -1,0 +1,17 @@
+---
+layout: post
+title: "Seperating-Axis GJK and contact information generation algorithm"
+date: 2010-10-10
+wordpress_id: 311
+permalink: /blogs/311
+comments: true
+---
+<ol>
+	<li>Use Seperating-Axis GJK metioned here: <a href="http://mollyrocket.com/849">http://mollyrocket.com/849</a>. Also add some kind of margin when using SA-GJK. So we can saftly do a early out, assume that if dot(A, D) &lt; 0, no intersection.</li>
+	<li>If intersection is found, in other words the SA-GJK does generate a simplex which contains the origin. Then we can use the simplex generated from SA-GJK as intial simplex input to EPA to calculate contact information, such as, contact points and normal, penetration depth.</li>
+</ol>
+做个笔记，记录下脑袋里边东西...研究了两个星期Collision detection，看得我抓狂。反正我现在的想法就是这样的...那个所谓SA-GJK，作为一个quick test（当然在此之前还需要broad phase collision detection check），确定两个物体在有margin的情况下是否有碰撞。如果有碰撞（没碰撞，当然就没他们啥事儿了），那就需要更进一步确定是否真正的碰撞，如何碰撞的...
+
+虽然SA-GJK只给出boolean，但是我还是得用啊...浪费半天写了一堆代码总不能不用嘛...
+
+继续研究...

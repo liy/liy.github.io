@@ -1,0 +1,11 @@
+---
+layout: post
+title: "Install Ruby through RVM on Xcode 4.2.1 on Lion"
+date: 2012-1-12
+wordpress_id: 94
+permalink: /blogs/94
+comments: true
+---
+rvm cannot compile executable, for some reasons:
+{% codeblock %}{% codeblock %}... configure: error: C compiler cannot create executables ...{% endcodeblock %}{% endcodeblock %}
+<a href="http://stackoverflow.com/questions/8032824/cant-install-ruby-under-lion-with-rvm-gcc-issues" target="_blank">This post</a> magically solve the problem!

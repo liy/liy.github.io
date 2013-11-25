@@ -1,0 +1,17 @@
+---
+layout: post
+title: "Install git through Homebrew on Lion notes"
+date: 2012-1-12
+wordpress_id: 91
+permalink: /blogs/91
+comments: true
+---
+I have Xcode installed already, which puts an older version of git in: <strong>/usr/local/bin/</strong>
+
+Homebrew install newer version of git at: <strong>/usr/local/bin/</strong>
+
+We have to mannally change <strong>$PATH</strong> variable to ensure the <strong>/user/local/bin</strong> comes before <strong>/usr/local/bin/</strong>
+
+<a href="https://github.com/mxcl/homebrew/issues/6432#issuecomment-1624857">https://github.com/mxcl/homebrew/issues/6432#issuecomment-1624857</a>
+
+By the way, the <strong>$PATH</strong> environment variable is loaded from this file: <strong>/etc/paths</strong>

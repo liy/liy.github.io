@@ -1,0 +1,30 @@
+---
+layout: post
+title: "Some notes about Ruby on Rail app deployment on Heroku "
+date: 2011-12-31
+wordpress_id: 88
+permalink: /blogs/88
+comments: true
+---
+If you get an error when you do database migration, during the deployment process:
+{% codeblock %}$ heroku rake db:migrate
+rake aborted!
+Please install the postgresql adapter: `gem install activerecord-postgresql-adapter` (pg is not part of the bundle. Add it to Gemfile.)Tasks: TOP =&gt; db:migrate =&gt; db:load_config
+(See full trace by running task with --trace){% endcodeblock %}
+Add PostgreSQL gem, replace the line <strong><em>gem 'sqlite3'</em></strong> with:
+{% codeblock %}group :development, :test do
+  gem 'sqlite3'
+end
+group :production do
+  gem 'pg'
+end{% endcodeblock %}
+This ensures the production using PostgreSQL, since Heroku does not support sqlite3.
+
+<del>If after success deployed the rail app, the application gives an error page like: “We're sorry, but something went wrong...” This is actually a generic error message. It might be caused by the assets loading problem. I did forget to compile the assets before deploy the app.</del>
+
+<del>Run the following command before deployment to compile the assets to <em><strong>public/</strong></em> directory
+
+</del>
+{% codeblock %}<del>bundle exec rake assets:precompile</del>{% endcodeblock %}
+Then do the deployment again:
+{% codeblock %}git push heroku master{% endcodeblock %}

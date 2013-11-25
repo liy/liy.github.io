@@ -1,0 +1,19 @@
+---
+layout: post
+title: "Create a Window in OpenGL without GLUT"
+date: 2010-12-4
+wordpress_id: 324
+permalink: /blogs/324
+comments: true
+---
+You'd better read both of them to gain the full understanding on Win32 and OpenGL setup.
+<ul>
+	<li><a href="http://www.winprog.org/tutorial/" target="_blank">theForger's Win32 API Tutorial</a> Part 1-4.</li>
+	<li><a href="http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=01" target="_blank">NeHe OpenGL lesson 1</a></li>
+</ul>
+不太喜欢用GLUT，之前用过，老是感觉很怪，比如有鼠标在屏幕上动，callback interval会变慢。另外也找不到合适的方式来设置game loop。最大的好处就是不需要写太多代码，而且跨平台。
+
+所以还是按照比较正常的win32开发方式来弄咯。NeHe的教程仿佛也没用GLUT。
+<div id="_mcePaste" class="mcePaste" style="position:absolute;left:-10000px;top:0;width:1px;height:1px;overflow:hidden;">
+# theForger's Win32 API Programming Tutorial
+</div>
