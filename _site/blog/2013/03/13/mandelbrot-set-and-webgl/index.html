@@ -1,0 +1,183 @@
+<html>
+  <head>
+    <meta content='AirCapsule' property='og:title' />
+    <title>AirCapsule</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+<link href='/images/fav.png' rel='shortcut icon'>
+<link href='/assets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/assets/global.css' rel='stylesheet' type='text/css' />
+<link href='/assets/style.css' rel='stylesheet' type='text/css' />
+<link href='/assets/responsive.css' rel='stylesheet' type='text/css' />
+<!-- - -->
+<script src='/assets/jquery.js' type='text/javascript'></script>
+<script src='/assets/pd.js' type='text/javascript'></script>
+<script src='/assets/stuff.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- mathjax config similar to math.stackexchange -->
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- - -->
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="http://muan.co/images/og.png" property="og:image" />
+
+  <meta content='http://aircapsule.com/blog/2013/03/13/mandelbrot-set-and-webgl/' property='og:url' />
+  <meta content="大二的时候学过 Computer Graphics。其中某堂课作业就是要求弄个 Mandelbrot set，当时是用的 Mesa OpenGL，仿佛弄得还多轻松的。结果时隔多年今天看了一下，连复数是咋回事儿都差不多搞忘了，赶紧复习了..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38976134-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <header class="site-header">
+  <a href="/" class="site-title">
+    <div class="block"></div>
+    <span class="firstname">AirCapsule</strong>
+  </a>
+  <nav>
+    
+      <a class="page" id="ind-about" href="/about.html">About</a>
+    
+      <a class="page" id="ind-rss" href="/feed.xml">RSS</a>
+    
+  </nav>
+</header>
+<!-- <a id="fork-me" class="fork-me" href="https://github.com/muan/muan.github.com"><img src="/images/fmog.png" alt="Fork me on GitHub"></a> -->
+
+        <section class="content">
+          <article>
+            <div class="mark"></div>
+            <header>
+              <h2 class="post-title">Mandelbrot set and WebGL</h2>
+              
+                <small class="datetime muted">13 Mar 2013</small>
+              
+            </header>
+            <p>大二的时候学过 Computer Graphics。其中某堂课作业就是要求弄个 Mandelbrot set，当时是用的 Mesa OpenGL，仿佛弄得还多轻松的。结果时隔多年今天看了一下，连复数是咋回事儿都差不多搞忘了，赶紧复习了一下，照着教程 <a href="http://dev.opera.com/articles/view/raw-webgl-101-part-3-advanced-shader/">advanced shader</a> 做了一个: <a href="http://jsfiddle.net/zUUQp/">Mandelbrot set</a></p>
+
+<p>方向键移动，加减号放大缩小。</p>
+
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/zUUQp/embedded/result,html/light/"></iframe>
+
+<p>需要支持 WebGL 的主流浏览器，Chrome, Firefox, Safari 之类的才能看得到。IE 内核的肯定没戏。</p>
+
+<p>这个图片核心就在这个公式: </p>
+
+<pre><code>f(x) = x*x + c 
+</code></pre>
+
+<p>上边公式里的 <strong><em>x</em></strong> 跟坐标轴没有关系，就是一个参数。</p>
+
+<p>而 c 才是最重要的，它是一个复数: </p>
+
+<pre><code>c = x + yi
+</code></pre>
+
+<p>这里边的 <strong><em>x</em></strong> 和 <strong><em>y</em></strong> 意思实际就是像素的坐标值。把每个像素的坐标值看成复数，带入到 <strong><em>f(x)</em></strong> 里边就可以判断该像素是不是属于 Mandelbrot set。</p>
+
+<p>最后这个神奇的图像的意思就是：遍历所有像素，如果该像素的 <strong><em>f(x)</em></strong> 数值趋近于 ∞ 。那么它就不在 Mandelbrot set里边，并且给它上个色（非黑色）。反过来说，黑色的像素点就表示 Mandelbrot set。</p>
+
+<p>如何判断该像素在 <strong><em>f(x)</em></strong> 下边是否趋近无穷？多循环几次，把前一次的结果带入下一次的 <strong><em>f(x)</em></strong> 作为参数 <strong><em>x</em></strong>，仿佛只要 <strong><em>x^2 + y^2 &gt;= 4</em></strong> 都可以直接判断为 ∞ 。嗯，反正大概就是这么一回事儿……</p>
+
+<p>看 wikipedia 看得我一愣一愣的，整数学的人就是爱故弄玄虚，啥子 complex plane 嘛！有好“复杂”嘛！说得好高深！结果就相当于普通的 x, y 坐标系（故弄玄虚得叫笛卡儿坐标系 Cartesian coordinate system）。</p>
+
+<p>反正老子记不到！是我越活越蠢还是啥子喃……</p>
+
+
+            <footer class="signoff">
+  <p>
+    Liy
+    <span class="muted">at 22:45</span>
+  </p>
+</footer>
+          </article>
+          
+          <div class="pagination">
+            
+              <div class="tip">Use ← and → to navigate between posts.</div>
+              <a href="/blogs/94" id="js-previous-post">
+                <span class="small-title">Previous Post</span>
+                <h4>Install Ruby through RVM on Xcode 4.2.1 on Lion</h4>
+                <span class="small upcase datetime muted">12 Jan 2012</span>
+              </a>
+            
+            
+              <hr />
+              <a href="/blog/2013/03/24/webgl-notes/" id="js-next-post">
+                <span class="small-title">Next Post</span>
+                <h4>webgl notes</h4>
+                <span class="small upcase datetime muted">24 Mar 2013</span>
+              </a>
+            
+          </div>
+          
+        </section>
+
+      
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+      var disqus_shortname = 'aircapsule';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://aircapsule.com/blog/2013/03/13/mandelbrot-set-and-webgl/';
+        var disqus_url = 'http://aircapsule.com/blog/2013/03/13/mandelbrot-set-and-webgl/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+      <footer class="site-footer">
+  Powered by <a href="http://jekyllrb.com/" target="_blank" id="jekyll">Jekyll</a> on <a href="http://github.com/liy/liy.github.com" target="_blank" id="repo">GitHub Pages</a></a>. Theme forked from <a href="http://muan.co/" target="_black">MU ANCHIOU</a>
+</footer>
+    </div>
+  </body>
+</html>
