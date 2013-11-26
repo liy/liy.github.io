@@ -219,11 +219,30 @@ article {
   }
 }
 
-.MathJax_Display .math {
-  margin-top: 30px;
-  margin-bottom: 30px;
+.MathJax_Display {
+  color: #333333;
+  .math {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 }
 
 .page {
   margin-left: 10px;
+}
+
+figure {
+  margin: 10px 0px 0 0;
+  img:not([height]) {
+    margin: 0;
+  }
+  width: 100%;
+  figcaption {
+    color: #AAAAAA;
+    font-size: 10px;
+    font-style: italic;
+    display: block;
+    text-align: right;
+    // line-height: 1.6em;
+  }
 }
