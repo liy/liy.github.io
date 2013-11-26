@@ -5,10 +5,17 @@ date: 2013-11-23 22:54
 comments: true
 categories: 
 cover: images/2013-11-23-normal-mapping/per_fragment_normal_map.jpg
+captions:
+    - First caption
+    - Second caption
 ---
 
 The normal map generated from 3D computer graphics software is usually in tangent space. It encodes the normal vector in object face's local coordinate. 
 ![<b>Figure 1.</b> Normal map](/images/2013-11-23-normal-mapping/brick_texture_small.jpg)This means that if the normal vector is perpendicular to the object surface, its value will be [0.5, 0.5, 1] which creates the bluish colour. One advantage of tangent space normal map texture is that we can transform the normal if the object's orientation is changed.
+
+{% figure 0 %}
+![test](/images/2013-11-23-normal-mapping/brick_texture_small.jpg)
+{% endfigure %}
 
 I did quite a lot of search on the internet. Most of them encourage to do the normal mapping and lighting in tangent space(I guess they use forward shading). This involves transform light and view vector into tangent space in vertex shader. For some reason, I have difficulty to visualize the tangent space(tangent coordinate system). It causes a lot of troubles during implementation and the final result is not very satisfied.
 
