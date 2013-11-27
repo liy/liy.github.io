@@ -48,14 +48,17 @@ module Jekyll
     Caption = /(\S[\S\s]*)/
     def initialize(tag_name, markup, tokens)
       super
-      @index = 0 #defaults to zero
-      @hideCaption = true
+      @showCaption = true
 
       #creating regular expression that grabs the index $2 at minimum, but optionally class and caption
       if markup =~ /(\d)+\s?(true)?/i
         #entering at least one integer will validate the regular expression
-        @index = Integer($1)
-        @hideCaption = $2
+        @index = Integer($1)-1
+        @showCaption = ($2 != 'false')
+      end
+
+      if !@index
+        raise "Missing 'index': "
       end
     end
 
@@ -66,35 +69,17 @@ module Jekyll
       # # source = safe_wrap(source)
       # source
 
-
-      numStr = (@index + 1).to_s
-      output = super
       code = super
-
-      caption = Liquid::Template.parse("{{ page.captions[#{@index}] | markdownify }}").render(context) unless @hideCaption
+      caption = Liquid::Template.parse("{{ page.captions[#{@index}] | markdownify }}").render(context).gsub(/<p>/,'').gsub(/<\/p>/,'') if @showCaption
       content = "#{Kramdown::Document.new(code).to_html}"
 
-      # remove the outer <p> tag
-      caption = caption.lstrip.rstrip.gsub(/<p>/,'')
-      content = content.lstrip.rstrip.gsub(/<p>/,'')
-
       figure = "<figure>"
-
-      figure += content
-
+      # remove the outer <p> tag
+      figure += content.gsub(/<p>/,'').gsub(/<\/p>/,'')
       if caption
-        figure += "<figcaption><b>Figure #{numStr}.</b> #{caption}</figcaption>"
-        figure += "</figure>"
-      else
-        figure += "</figure>"
+        figure += "<figcaption id='figure-#{@index+1}'><b>Figure #{(@index + 1).to_s}.</b> #{caption}</figcaption>"
       end
-
-
-      figure
-
-
-
-
+      figure += "</figure>"
     end
   end
 end
