@@ -43,7 +43,21 @@
 <script type="text/javascript"
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<!-- - -->
+
+<!-- caption
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Every image referenced from a Markdown document
+    $("article img").each(function() {
+      // Let's put a caption if there is one
+      if($(this).attr("alt"))
+        $(this).wrap('<figure class="image"></figure>')
+          .after('<figcaption>'+$(this).attr("alt")+'</figcaption>');
+      });
+  });
+</script>
+-->
+
 <meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
 <meta content='text/html; charset=utf-8' http-equiv='content-type' />
 <meta content="http://muan.co/images/og.png" property="og:image" />
@@ -85,6 +99,34 @@
 <!-- <a id="fork-me" class="fork-me" href="https://github.com/muan/muan.github.com"><img src="/images/fmog.png" alt="Fork me on GitHub"></a> -->
       <section class="content">
         <ul class="posts">
+  
+  <li class="post">
+    <a href="/blog/2013/11/23/normal-mapping/" class="post-link has-cover">
+      
+        <div class="post-cover" style="background-image: url(images/2013-11-23-normal-mapping/per_fragment_normal_map.jpg);" /></div>
+      
+      <div class="mark"></div>
+      <h2 class="post-title">
+        Normal Mapping<br />
+      </h2>
+      <span class="meta"><time data-time="2013-11-23 22:54:00 +0000" title="2013-11-23 22:54:00 +0000">23 Nov 2013</time></span>
+      <p class="excerpt">The normal map generated from 3D computer graphics software is usually in tangent space. It encodes the normal vector in object face’s local coordinate.Figure 1. Normal mapThis means that if the normal vector is perpendicular to the object surface, its value will be [0.5, 0.5, 1] which creates the bluish colour. One advantage of tangent space normal map texture is that we can transform the normal if the object’s orientation is changed.</p>
+    </a>
+  </li>
+  
+  <li class="post">
+    <a href="/blog/2013/11/23/normal-mapping/" class="post-link has-cover">
+      
+        <div class="post-cover" style="background-image: url(images/2013-11-23-normal-mapping/per_fragment_normal_map.jpg);" /></div>
+      
+      <div class="mark"></div>
+      <h2 class="post-title">
+        Normal Mapping<br />
+      </h2>
+      <span class="meta"><time data-time="2013-11-23 22:54:00 +0000" title="2013-11-23 22:54:00 +0000">23 Nov 2013</time></span>
+      <p class="excerpt">The normal map generated from 3D computer graphics software is usually in tangent space. It encodes the normal vector in object face’s local coordinate.Figure 1. Normal mapThis means that if the normal vector is perpendicular to the object surface, its value will be [0.5, 0.5, 1] which creates the bluish colour. One advantage of tangent space normal map texture is that we can transform the normal if the object’s orientation is changed.</p>
+    </a>
+  </li>
   
   <li class="post">
     <a href="/blog/2013/11/23/octopress-to-jekyll/" class="post-link has-cover">

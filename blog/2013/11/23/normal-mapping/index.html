@@ -1,0 +1,440 @@
+<html>
+  <head>
+    <meta content='AirCapsule' property='og:title' />
+    <title>AirCapsule</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+<link href='/images/fav.png' rel='shortcut icon'>
+<link href='/assets/syntax.css' rel='stylesheet' type='text/css' />
+<link href='/assets/global.css' rel='stylesheet' type='text/css' />
+<link href='/assets/style.css' rel='stylesheet' type='text/css' />
+<link href='/assets/responsive.css' rel='stylesheet' type='text/css' />
+<!-- - -->
+<script src='/assets/jquery.js' type='text/javascript'></script>
+<script src='/assets/pd.js' type='text/javascript'></script>
+<script src='/assets/stuff.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- mathjax config similar to math.stackexchange -->
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<!-- caption
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Every image referenced from a Markdown document
+    $("article img").each(function() {
+      // Let's put a caption if there is one
+      if($(this).attr("alt"))
+        $(this).wrap('<figure class="image"></figure>')
+          .after('<figcaption>'+$(this).attr("alt")+'</figcaption>');
+      });
+  });
+</script>
+-->
+
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+<meta content="http://muan.co/images/og.png" property="og:image" />
+
+  <meta content='http://aircapsule.com/blog/2013/11/23/normal-mapping/' property='og:url' />
+  <meta content="The normal map generated from 3D computer graphics software is usually in tangent space. It encodes the normal vector..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+<script type='text/javascript'>
+  //<![CDATA[
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38976134-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  //]]>
+</script>
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <header class="site-header">
+  <a href="/" class="site-title">
+    <div class="block"></div>
+    <span class="firstname">AirCapsule</strong>
+  </a>
+  <nav>
+    
+      <a class="page" id="ind-about" href="/about.html">About</a>
+    
+      <a class="page" id="ind-rss" href="/feed.xml">RSS</a>
+    
+  </nav>
+</header>
+<!-- <a id="fork-me" class="fork-me" href="https://github.com/muan/muan.github.com"><img src="/images/fmog.png" alt="Fork me on GitHub"></a> -->
+
+        <section class="content">
+          <article>
+            <div class="mark"></div>
+            <header>
+              <h2 class="post-title">Normal Mapping</h2>
+              
+                <small class="datetime muted">23 Nov 2013</small>
+              
+            </header>
+            <p>The normal map generated from 3D computer graphics software is usually in tangent space. It encodes the normal vector in object face’s local coordinate.</p>
+<figure>
+<img src="/images/2013-11-23-normal-mapping/brick_texture_small.jpg" alt="Normal map" />
+<figcaption id="figure-1"><b>Figure 1.</b> Normal map
+</figcaption></figure>
+<p>This means that if the normal vector is perpendicular to the object surface, its value will be [0.5, 0.5, 1] which creates the bluish colour. One advantage of tangent space normal map texture is that we can transform the normal if the object’s orientation is changed.</p>
+
+<p>I did quite a lot of search on the internet. Most of them encourage to do the normal mapping and lighting in tangent space(I guess they use forward shading). This involves transform light and view vector into tangent space in vertex shader. For some reason, I have difficulty to visualize the tangent space(tangent coordinate system). It causes a lot of troubles during implementation and the final result is not very satisfied.</p>
+<figure>
+<img src="/images/2013-11-23-normal-mapping/tangent_space_specular.jpg" alt="Tangent space specular" />
+<figcaption id="figure-2"><b>Figure 2.</b> Tangent space specular
+</figcaption></figure>
+<p>Figure 2 is the lighting calculated in tangent space. You can see the specular light(using half angle) is bended. This is because I normalized view vector of tangent space in vertex shader.</p>
+
+<p>The way I understand is that after vertex shader, rasterisation process uses <a href="http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/">barycentric interpolation</a>. It actually does give you correct value when you interpolate positions across three vertices. But for any non-spatial attributes such as color and direction the approach simply does not work in some cases.</p>
+
+<p>View and light direction are used for specular lighting. They are calculated by subtracting eye and light position by the vertex position. Although it is a directional vector, but it does depends on the physical location. Vector normalization process actually changed the position from the original location, in this case produces a bended specular.</p>
+
+<p>More information please refers to this article: <a href="http://interplayoflight.wordpress.com/2013/05/17/correctly-interpolating-viewlight-vectors-on-large-triangles/">correctly interpolating view/light vectors on large triangles</a></p>
+
+<figure>
+<img src="/images/2013-11-23-normal-mapping/tangent_space_normal_map.jpg" alt="Tangent space normal map" />
+<figcaption id="figure-3"><b>Figure 3.</b> Tangent space normal map
+</figcaption></figure>
+<p>But if we enable normal map in tangent space, it is actually not too bad at least you won’t notice the bended specular. It is very easy to miss this rendering bug.</p>
+
+<p>Considering the deferred shading, however, requires the normal to be calculated in world or eye space anyway. Unless you want to encode the transformation matrix in the texture(every face has different transformation matrix) which transform eye and light vector into tangent space. </p>
+
+<p>I decided to do the normal mapping in eye space, in fragment shader. I just like placing many lights in the scene, plus I feel much easier to visualize and understand the process in eye space.</p>
+
+<h1 id="tangent-space">Tangent Space</h1>
+<blockquote>
+  <p>As far as the name goes, tangent space is also known as texture space in some cases.</p>
+
+  <p>Tangent space is just another such coordinate system, with it’s own origin. This is the coordinate system in which the texture coordinates for a face are specified. The tangent space system will most likely vary for any two faces.</p>
+
+  <p><cite><a href="http://www.gamasutra.com/view/feature/1515/messing_with_tangent_space.php">Siddharth Hegde, Messing with Tangent Space</a></cite></p>
+</blockquote>
+
+<p>I also like to treat the tangent space as a coordinate system before model space, the model’s vertex starts in the 2D texture space(texture coordinate system) which describes how the texture pixel should be mapped to the model. Then we assign another 3D position value to the vertex defines its location in the model, which brings it into model space.</p>
+
+<p>We just need to construct a matrix that transform vertex from texture space into model space. From there we are free to apply other matrix which transform to world or eye space.</p>
+
+<h1 id="calculate-tangent-space-to-model-space-matrix-using-basis">Calculate Tangent space to Model space Matrix using basis</h1>
+<p>Before doing the calculation, let’s defines <script type="math/tex"> \bigl[ \begin{smallmatrix} U \\ V \\ 1 \end{smallmatrix} \bigr] </script> which describes the vertex is mapped to the texture pixel at point $ \scriptsize ( U, V ) $ in texture space, and <script type="math/tex"> \bigl[ \begin{smallmatrix} X \\ Y \\ Z \end{smallmatrix} \bigr] </script> to be the vertex’s actual position in model space. We also have the basis of tangent space: $T$, $B$ and $N$ named <strong>tangent</strong>, <strong>bitangent</strong> and <strong>normal</strong>. These basis are also unit vector. Now we can create a linear relationship between tangent space and model space.</p>
+
+<figure>
+<script type="math/tex; mode=display">% <![CDATA[
+
+\left[ \begin{matrix} 
+T_x & B_x & N_x \\ 
+T_y & B_y & N_y \\ 
+T_z & B_z & N_z
+\end{matrix} \right]
+\times
+\left[ \begin{array}{c} 
+U \\ 
+V \\
+1 
+\end{array} \right]
+= 
+\left[ \begin{array}{c} 
+X \\ 
+Y \\
+Z 
+\end{array} \right]
+ %]]></script>
+<figcaption id="figure-4"><b>Figure 4.</b> Tangent space to model space transformation
+</figcaption></figure>
+
+<p>It is not obvious why the transform matrix consists of basis <script type="math/tex">T</script>, <script type="math/tex">B</script> and <script type="math/tex">N</script> <strong>in model space</strong>, the subscript $x$, $y$ and $z$ represents the basis projection onto the model space axis. In essence, the matrix transform is just description of a linear relationship between two vectors: how vector in model space changes while we change the vector in texture space.</p>
+<figure>
+<img src="/images/2013-11-23-normal-mapping/axis_2.jpg" alt="basis projection" />
+<figcaption id="figure-5"><b>Figure 5.</b> Basis projection
+</figcaption></figure>
+<p><a href="#figure-5">Figure 5</a> describe the process. All the basis of tangent space are projected onto the model space axis <script type="math/tex">X</script>. It is exactly the first row of the matrix: $ \scriptsize [ T_x  B_x  N_x ] $. The multiplication to the the vector <script type="math/tex"> \bigl[ \begin{smallmatrix} U \\ V \\ 1 \end{smallmatrix} \bigr] </script> in texture space in fact describes the linear relationship between two spaces, producing a vector lies on <script type="math/tex">X</script> axis in model space. It is easy to understand and produce the other two vectors lies on <script type="math/tex">Y</script> and <script type="math/tex">Z</script> axis, results the final model space vector.</p>
+
+<h1 id="calculate-tangent-bitangent">Calculate Tangent, Bitangent</h1>
+
+<p>Although we know $N$ which is the surface normal, $T$ and $B$ are still unknown vectors. We need to have 6 equations to solve $T$ and $B$. <a href="#figure-4">Figure 4</a> can be used to construct the equations. Imagine a triangle <script type="math/tex"> \triangle P_0 P_1 P_2 </script>. At each point, it has corresponding texture coordinate <script type="math/tex">(U_0,V_0), (U_1,V_1), (U_2,V_2)</script>.</p>
+
+<p>We are only interested in edges of the triangle. $\Delta U, \Delta V$ are the two components of the edge in texture space. We need two equations to solve 6 unknowns. Therefore we need two edges definitions, subscript represents the different edge.</p>
+
+<script type="math/tex; mode=display">
+\Delta U_1 = U_1 - U_0 \quad \Delta V_1 = V_1 - V_0 \\
+\Delta U_2 = U_2 - U_0 \quad \Delta V_2 = V_2 - V_0
+</script>
+
+<p>As previously described, $ T_x, B_x $ describes a ratio. How changing in tangent space causes changes in model space. $U, V$ are projection of the edge on $T B$ axis. By multiplying $U, V$ by corresponding $T_x, T_y, T_z, B_x, B_y, B_z$ the final model space vector can be calculated.</p>
+
+<script type="math/tex; mode=display">
+(T_x*U_1 + B_x*V_1,\quad  T_y*U_1 + B_y*V_1,\quad  T_z*U_1 + B_z*V_1) = (X_1, Y_1, Z_1) \\
+(T_x*U_2 + B_x*V_2,\quad  T_y*U_2 + B_y*V_2,\quad  T_z*U_2 + B_z*V_2) = (X_2, Y_2, Z_2)
+</script>
+
+<p>Combine two edge calculations, and simply it using matrix form.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+
+\left[ \begin{matrix} 
+T_x & B_x \\ 
+T_y & B_y \\ 
+T_z & B_z
+\end{matrix} \right]
+\left[ \begin{matrix} 
+U_1 & U_2 \\
+V_1 & V_2
+\end{matrix} \right]
+=
+\left[ \begin{matrix} 
+X_1 & X_2 \\ 
+Y_1 & Y_2 \\ 
+Z_1 & Z_2
+\end{matrix} \right]
+ %]]></script>
+
+<p>Multiply both side by <script type="math/tex">% <![CDATA[
+ \left[ \begin{smallmatrix} U_1 & U_2 \\ V_1 & V_2 \end{smallmatrix} \right]^{-1}  %]]></script>, <a href="http://en.wikipedia.org/wiki/Invertible_matrix#Inversion_of_2.C3.972_matrices">inverse of the matrix</a>.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+
+\left[ \begin{matrix} 
+T_x & B_x \\ 
+T_y & B_y \\ 
+T_z & B_z
+\end{matrix} \right]
+=
+\left[ \begin{matrix} 
+X_1 & X_2 \\ 
+Y_1 & Y_2 \\ 
+Z_1 & Z_2
+\end{matrix} \right]
+*
+\left[ \begin{matrix} 
+U_1 & U_2 \\
+V_1 & V_2
+\end{matrix} \right]^{-1}
+
+\\
+\left[ \begin{matrix} 
+T_x & B_x \\ 
+T_y & B_y \\ 
+T_z & B_z
+\end{matrix} \right]
+=
+\left[ \begin{matrix} 
+X_1 & X_2 \\ 
+Y_1 & Y_2 \\ 
+Z_1 & Z_2
+\end{matrix} \right]
+\scriptsize \frac{1}{U_1*V_2-U_2*V_1}
+\normalsize \left[ \begin{matrix} 
+V_2 & -U_2 \\
+-V_1 & U_1
+\end{matrix} \right]
+ %]]></script>
+
+<p>The $T$ and $B$ can now be easily calculated. Final tangent space to model space matrix can be constructed.</p>
+
+<h1 id="webgl-javascript-code">WebGL JavaScript code</h1>
+<p>Tangent and Bitangent vector needs to be calculated for every vertex. Some tangent space normal mapping tutorial does not pass bitangent vector as an attribute. Instead, they restore the bitangent vector by doing cross product of vertex normal and tangent. This approach also requires an extra <em>handedness</em> value to be calculated and pass to the vertex shader attribute(usually stored in $w$ component of tangent vector). The <em>handedness</em> is required because some model is symmetric, in order to save memory only half side of the normal map is used, other side of normal map is mirrored. In this case, the cross product of normal and tangent vector will produce a bitangent vector with opposite direction.</p>
+
+<p>Because I only concerns about deferred rendering, it is also definitely not ideal to calculate bitangent vector in fragment shader on every fragment. With a bit cost of memory providing the bitangent vector to the shader will solve all the problems mentioned above.</p>
+
+<p>Below is the code for calculating tangent and bitangent. Just like calculating face’s normal, accumulate the tangent and bitangent. Final normalization averages all the vectors.</p>
+
+<p>It is per model operation, so should be placed in you Model class. So it only processes once. Treat them as an attributes of vertex in a model, just like normal and texture coordinate of the vertex. It is straightforward to understand.</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="lineno"> 1</span> <span class="c1">// calculate tangent by accumulate the tangent vector just like calculating the face normal</span>
+<span class="lineno"> 2</span> <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">72</span><span class="p">)).</span><span class="nx">map</span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="lineno"> 3</span> <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">72</span><span class="p">)).</span><span class="nx">map</span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="lineno"> 4</span> <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="mi">12</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">){</span>
+<span class="lineno"> 5</span>     <span class="c1">// get the vertex index</span>
+<span class="lineno"> 6</span>     <span class="kd">var</span> <span class="nx">i0</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="p">];</span>
+<span class="lineno"> 7</span>     <span class="kd">var</span> <span class="nx">i1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno"> 8</span>     <span class="kd">var</span> <span class="nx">i2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">indices</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno"> 9</span> 
+<span class="lineno">10</span>     <span class="c1">// edge 1 in model space</span>
+<span class="lineno">11</span>     <span class="kd">var</span> <span class="nx">x1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="p">];</span>
+<span class="lineno">12</span>     <span class="kd">var</span> <span class="nx">y1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">13</span>     <span class="kd">var</span> <span class="nx">z1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">14</span>     <span class="c1">// edge 2 in model space</span>
+<span class="lineno">15</span>     <span class="kd">var</span> <span class="nx">x2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="p">];</span>
+<span class="lineno">16</span>     <span class="kd">var</span> <span class="nx">y2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">17</span>     <span class="kd">var</span> <span class="nx">z2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span>     <span class="c1">// edge in texture space</span>
+<span class="lineno">20</span>     <span class="kd">var</span> <span class="nx">u1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">21</span>     <span class="kd">var</span> <span class="nx">v1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">22</span>     <span class="kd">var</span> <span class="nx">u2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">23</span>     <span class="kd">var</span> <span class="nx">v2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">24</span> 
+<span class="lineno">25</span>     <span class="c1">// determinant of the 2x2 matrix</span>
+<span class="lineno">26</span>     <span class="kd">var</span> <span class="nx">det</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="nx">u1</span><span class="o">*</span><span class="nx">v2</span> <span class="o">-</span> <span class="nx">u2</span><span class="o">*</span><span class="nx">v1</span><span class="p">);</span>
+<span class="lineno">27</span> 
+<span class="lineno">28</span>     <span class="c1">// the linear relationship between model space and tangent space.</span>
+<span class="lineno">29</span>     <span class="kd">var</span> <span class="nx">Tx</span> <span class="o">=</span> <span class="nx">det</span> <span class="o">*</span> <span class="p">(</span><span class="nx">v2</span><span class="o">*</span><span class="nx">x1</span> <span class="o">-</span> <span class="nx">v1</span><span class="o">*</span><span class="nx">x2</span><span class="p">);</span>
+<span class="lineno">30</span>     <span class="kd">var</span> <span class="nx">Ty</span> <span class="o">=</span> <span class="nx">det</span> <span class="o">*</span> <span class="p">(</span><span class="nx">v2</span><span class="o">*</span><span class="nx">y1</span> <span class="o">-</span> <span class="nx">v1</span><span class="o">*</span><span class="nx">y2</span><span class="p">);</span>
+<span class="lineno">31</span>     <span class="kd">var</span> <span class="nx">Tz</span> <span class="o">=</span> <span class="nx">det</span> <span class="o">*</span> <span class="p">(</span><span class="nx">v2</span><span class="o">*</span><span class="nx">z1</span> <span class="o">-</span> <span class="nx">v1</span><span class="o">*</span><span class="nx">z2</span><span class="p">);</span>
+<span class="lineno">32</span>     <span class="kd">var</span> <span class="nx">Bx</span> <span class="o">=</span> <span class="nx">det</span> <span class="o">*</span> <span class="p">(</span><span class="nx">u1</span><span class="o">*</span><span class="nx">x2</span> <span class="o">-</span> <span class="nx">u2</span><span class="o">*</span><span class="nx">x1</span><span class="p">);</span>
+<span class="lineno">33</span>     <span class="kd">var</span> <span class="nx">By</span> <span class="o">=</span> <span class="nx">det</span> <span class="o">*</span> <span class="p">(</span><span class="nx">u1</span><span class="o">*</span><span class="nx">y2</span> <span class="o">-</span> <span class="nx">u2</span><span class="o">*</span><span class="nx">y1</span><span class="p">);</span>
+<span class="lineno">34</span>     <span class="kd">var</span> <span class="nx">Bz</span> <span class="o">=</span> <span class="nx">det</span> <span class="o">*</span> <span class="p">(</span><span class="nx">u1</span><span class="o">*</span><span class="nx">z2</span> <span class="o">-</span> <span class="nx">u2</span><span class="o">*</span><span class="nx">z1</span><span class="p">);</span>
+<span class="lineno">35</span> 
+<span class="lineno">36</span>     <span class="c1">// accumulate the tangent vector and bitangent vector</span>
+<span class="lineno">37</span>     <span class="c1">// you will need to normalize the vectors in the end.(averaging)</span>
+<span class="lineno">38</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Tx</span><span class="p">;</span>
+<span class="lineno">39</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Ty</span><span class="p">;</span>
+<span class="lineno">40</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Tz</span><span class="p">;</span>
+<span class="lineno">41</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Tx</span><span class="p">;</span>
+<span class="lineno">42</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Ty</span><span class="p">;</span>
+<span class="lineno">43</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Tz</span><span class="p">;</span>
+<span class="lineno">44</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Tx</span><span class="p">;</span>
+<span class="lineno">45</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Ty</span><span class="p">;</span>
+<span class="lineno">46</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Tz</span><span class="p">;</span>
+<span class="lineno">47</span> 
+<span class="lineno">48</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Bx</span><span class="p">;</span>
+<span class="lineno">49</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">By</span><span class="p">;</span>
+<span class="lineno">50</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i0</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Bz</span><span class="p">;</span>
+<span class="lineno">51</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Bx</span><span class="p">;</span>
+<span class="lineno">52</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">By</span><span class="p">;</span>
+<span class="lineno">53</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i1</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Bz</span><span class="p">;</span>
+<span class="lineno">54</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Bx</span><span class="p">;</span>
+<span class="lineno">55</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">By</span><span class="p">;</span>
+<span class="lineno">56</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i2</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">Bz</span><span class="p">;</span>
+<span class="lineno">57</span> <span class="p">}</span>
+<span class="lineno">58</span> 
+<span class="lineno">59</span> <span class="c1">// normalize the accumulated tangent and bitangent vectors.</span>
+<span class="lineno">60</span> <span class="c1">// It averages all the vectors.</span>
+<span class="lineno">61</span> <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">.</span><span class="nx">length</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">){</span>
+<span class="lineno">62</span>     <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">vec3</span><span class="p">.</span><span class="nx">fromValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">normals</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">normals</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">normals</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]);</span>
+<span class="lineno">63</span>     <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">vec3</span><span class="p">.</span><span class="nx">fromValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]);</span>
+<span class="lineno">64</span>     <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">vec3</span><span class="p">.</span><span class="nx">fromValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]);</span>
+<span class="lineno">65</span> 
+<span class="lineno">66</span>     <span class="nx">vec3</span><span class="p">.</span><span class="nx">normalize</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
+<span class="lineno">67</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="lineno">68</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">69</span>     <span class="k">this</span><span class="p">.</span><span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">70</span> 
+<span class="lineno">71</span>     <span class="nx">vec3</span><span class="p">.</span><span class="nx">normalize</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<span class="lineno">72</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="lineno">73</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="lineno">74</span>     <span class="k">this</span><span class="p">.</span><span class="nx">bitangents</span><span class="p">[</span><span class="nx">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="lineno">75</span> <span class="p">}</span>
+</code></pre></div>
+
+<p>Vertex shader</p>
+
+<div class="highlight"><pre><code class="glsl"><span class="n">v_Tangent</span> <span class="o">=</span> <span class="n">u_ModelViewMatrixInverseTranspose</span> <span class="o">*</span> <span class="n">a_Tangent</span><span class="p">;</span>
+<span class="n">v_Bitangent</span> <span class="o">=</span> <span class="n">u_ModelViewMatrixInverseTranspose</span> <span class="o">*</span> <span class="n">a_Bitangent</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Fragment shader</p>
+
+<div class="highlight"><pre><code class="glsl"><span class="k">vec3</span> <span class="n">calculateNormal</span><span class="p">(){</span>
+  <span class="c1">// decode normal map</span>
+  <span class="k">vec3</span> <span class="n">normal</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">texture2D</span><span class="p">(</span><span class="n">normalTexture</span><span class="p">,</span> <span class="n">v_TexCoord</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">).</span><span class="n">xyz</span> <span class="p">;</span>
+
+  <span class="k">vec3</span> <span class="n">N</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v_Normal</span><span class="p">);</span>
+  <span class="k">vec3</span> <span class="n">T</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v_Tangent</span><span class="p">);</span>
+  <span class="k">vec3</span> <span class="n">B</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v_Bitangent</span><span class="p">);</span>
+  <span class="c1">// transform from tangent space into eye space</span>
+  <span class="c1">// T,B,N corresponds to first, second and third COLUMN</span>
+  <span class="k">mat3</span> <span class="n">TBN</span> <span class="o">=</span> <span class="k">mat3</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">TBN</span> <span class="o">*</span> <span class="n">normal</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>This is the final result, without adding specular and gloss map.</p>
+
+<p><img src="/images/2013-11-23-normal-mapping/per_fragment_normal_map.jpg" alt="Per fragment normal map" /></p>
+
+<p>Also notice that the normal map texture is in the range of [0, 1], which has to be multiplied by 2 and minus 1 in order to map to the real normal range [-1, 1]. </p>
+
+            <footer class="signoff">
+  <p>
+    Liy
+    <span class="muted">at 22:54</span>
+  </p>
+</footer>
+          </article>
+          
+          <div class="pagination">
+            
+              <div class="tip">Use ← and → to navigate between posts.</div>
+              <a href="/blog/2013/11/23/octopress-to-jekyll/" id="js-previous-post">
+                <span class="small-title">Previous Post</span>
+                <h4>Octopress to Jekyll</h4>
+                <span class="small upcase datetime muted">23 Nov 2013</span>
+              </a>
+            
+            
+              <hr />
+              <a href="/blog/2013/11/23/normal-mapping/" id="js-next-post">
+                <span class="small-title">Next Post</span>
+                <h4>Normal Mapping</h4>
+                <span class="small upcase datetime muted">23 Nov 2013</span>
+              </a>
+            
+          </div>
+          
+        </section>
+
+      
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+      var disqus_shortname = 'aircapsule';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://aircapsule.com/blog/2013/11/23/normal-mapping/';
+        var disqus_url = 'http://aircapsule.com/blog/2013/11/23/normal-mapping/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+      <footer class="site-footer">
+  Powered by <a href="http://jekyllrb.com/" target="_blank" id="jekyll">Jekyll</a> on <a href="http://github.com/liy/liy.github.com" target="_blank" id="repo">GitHub Pages</a></a>. Theme forked from <a href="http://muan.co/" target="_black">MU ANCHIOU</a>
+</footer>
+    </div>
+  </body>
+</html>

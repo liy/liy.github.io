@@ -225,9 +225,23 @@ article {
   .MathJax .math {
     margin-bottom: 0.3em; }
 
-.MathJax_Display .math {
-  margin-top: 30px;
-  margin-bottom: 30px; }
+.MathJax_Display {
+  color: #333333; }
+  .MathJax_Display .math {
+    margin-top: 30px;
+    margin-bottom: 30px; }
 
 .page {
   margin-left: 10px; }
+
+figure {
+  margin: 10px 0px 0 0;
+  width: 100%; }
+  figure img:not([height]) {
+    margin: 0; }
+  figure figcaption {
+    color: #AAAAAA;
+    font-size: 10px;
+    font-style: italic;
+    display: block;
+    text-align: right; }
