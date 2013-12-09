@@ -22,8 +22,7 @@
 &lt;/figcaption&gt;&lt;/figure&gt;
 &lt;p&gt;Figure 2 is the lighting calculated in tangent space. You can see the specular light(using half angle) is bended. This is because I normalized view vector of tangent space in vertex shader.&lt;/p&gt;
 
-&lt;p&gt;The way I understand is that after vertex shader, rasterisation process uses &lt;a href=&quot;http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/&quot;&gt;barycentric interpolation&lt;/a&gt;. It actually does give you correct value when you interpolate positions across three vertices. But for any non-spatial attributes such as color and direction the approach simply does not work in some cases. &lt;img src=&quot;&quot; alt=&quot;triangle color interpolation image needed&quot; /&gt;
-You can see that on the hypotenuse of the triangle degrades to the linear interpolation without contribution of blue color.&lt;/p&gt;
+&lt;p&gt;The way I understand is that after vertex shader, rasterisation process uses &lt;a href=&quot;http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/&quot;&gt;barycentric interpolation&lt;/a&gt;. It actually does give you correct value when you interpolate positions across three vertices. But for any non-spatial attributes such as color and direction the approach simply does not work in some cases.&lt;/p&gt;
 
 &lt;p&gt;View and light direction are used for specular lighting. They are calculated by subtracting eye and light position by the vertex position. Although it is a directional vector, but it does depends on the physical location. Vector normalization process actually changed the position from the original location, in this case produces a bended specular.&lt;/p&gt;
 
@@ -33,7 +32,7 @@ You can see that on the hypotenuse of the triangle degrades to the linear interp
 &lt;img src=&quot;/images/2013-11-23-normal-mapping/tangent_space_normal_map.jpg&quot; alt=&quot;Tangent space normal map&quot; /&gt;
 &lt;figcaption id=&quot;figure-3&quot;&gt;&lt;b&gt;Figure 3.&lt;/b&gt; Tangent space normal map
 &lt;/figcaption&gt;&lt;/figure&gt;
-&lt;p&gt;But if we enable normal map in tangent space, it is actually not too bad at least you won’t notice the bended specular. It is easy to fool the human eyes on a rough surface.&lt;/p&gt;
+&lt;p&gt;But if we enable normal map in tangent space, it is actually not too bad at least you won’t notice the bended specular. It is easy to miss this rendering bug.&lt;/p&gt;
 
 &lt;p&gt;Considering the deferred shading, however, requires the normal to be calculated in world or eye space anyway. Unless you want to encode the transformation matrix in the texture(every face has different transformation matrix) which transform eye and light vector into tangent space. &lt;/p&gt;
 
