@@ -14,8 +14,8 @@ source_branch = "source"
 
 posts_dir       = "_posts"    # directory for blog files
 drafts_dir      = "_drafts"   # directory for draft files
-new_post_ext    = "md"  # default new post file extension when using the new_post task
-new_page_ext    = "md"  # default new page file extension when using the new_page task
+new_post_ext    = "markdown"  # default new post file extension when using the new_post task
+new_page_ext    = "markdown"  # default new page file extension when using the new_page task
 
 editor = "subl"
 
