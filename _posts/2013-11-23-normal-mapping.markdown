@@ -25,8 +25,7 @@ I did quite a lot of search on the internet. Most of them encourage to do the no
 {% endfigure %}
 Figure 2 is the lighting calculated in tangent space. You can see the specular light(using half angle) is bended. This is because I normalized view vector of tangent space in vertex shader.
 
-The way I understand is that after vertex shader, rasterisation process uses [barycentric interpolation][1]. It actually does give you correct value when you interpolate positions across three vertices. But for any non-spatial attributes such as color and direction the approach simply does not work in some cases. ![triangle color interpolation image needed]()
-You can see that on the hypotenuse of the triangle degrades to the linear interpolation without contribution of blue color.
+The way I understand is that after vertex shader, rasterisation process uses [barycentric interpolation][1]. It actually does give you correct value when you interpolate positions across three vertices. But for any non-spatial attributes such as color and direction the approach simply does not work in some cases.
 
 [1]:http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-9-ray-triangle-intersection/barycentric-coordinates/
 
@@ -39,7 +38,7 @@ More information please refers to this article: [correctly interpolating view/li
 {% figure 3 %}
 ![Tangent space normal map](/images/2013-11-23-normal-mapping/tangent_space_normal_map.jpg)
 {% endfigure %}
-But if we enable normal map in tangent space, it is actually not too bad at least you won't notice the bended specular. It is easy to fool the human eyes on a rough surface.
+But if we enable normal map in tangent space, it is actually not too bad at least you won't notice the bended specular. It is easy to miss this rendering bug.
 
 Considering the deferred shading, however, requires the normal to be calculated in world or eye space anyway. Unless you want to encode the transformation matrix in the texture(every face has different transformation matrix) which transform eye and light vector into tangent space. 
 
